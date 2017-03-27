@@ -1,0 +1,29 @@
+\documentclass[letterpaper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1.75in]{geometry}
+\usepackage{setspace}
+\linespread{1.5}
+
+\pagestyle{empty}
+
+\title{Computer Security Project Proposal \\
+A Comparison of Image Steganography Techniques}
+\author{
+Neivin Mathew,
+Robyn Rintjema,
+Steven Kalapos
+}
+
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+Steganography is the practice of concealing a file, image, or message within another file, image or message. While cryptography attempts to obfuscate a message into a cipher that is unreadable to the human eye, steganography aims to hide a secret message in plain sight. The advantage of steganography over cryptography is that the secret message does not attract attention to itself as an object of interest. Due to this nature, even if an attacker obtains concealed sensitive data, they might not only be unaware that they possess some secret information, but also not know what algorithm was used to conceal it.\\
+
+The objective of this project will be to compare two different steganography techniques. It will analyze a Spatial Domain technique known as the Least Significant Bit (LSB) technique, and a Transform Domain technique called the Discrete Cosine Transform (DCT) technique. LSB is a simple method of concealing data in the least significant bits of pixel values without altering the cover image too much. DCT involves embedding a message in an image that is transformed in the frequency domain, and the message bits are inserted into the transformed coefficients of the cover image.\\
+
+This project will compare these two implementations for effectiveness, strength and the impact of hiding a message in the cover image.
+
+\end{document}\grid
