@@ -46,12 +46,11 @@ class LSB():
         capacity = 0
         if img:
             capacity = self.cover.width * self.cover.height * (self.get_bit_depth()/8)
-            print ('Capacity of image:\t' + str(capacity))
+            # print ('Capacity of image:\t' + str(capacity))
 
         # Convert the string message into bits 
-        self.bits = "".join(self.messageToBits(self.message))
-        print('Message bits:\t\t' + str(len(self.bits)))
-        print(self.bits)
+        self.bits = ''.join(self.messageToBits(self.message))
+        #print('Message bits:\t\t' + str(len(self.bits)))
 
         if len(self.bits) >= capacity:
             print('Error: The message is too long to be encoded into the image ' + self.filename)
@@ -65,9 +64,9 @@ class LSB():
         return blankLSB | int(bit)
 
 
-    def hide(self, secretMessage):
+    def hide(self, secretMessage, outFilename):
         # Add length of message to message
-        self.message = str(len(secretMessage)) + ":" + secretMessage
+        self.message = str(len(secretMessage)) + ':' + secretMessage
 
 
         # Check that the message can fit inside the image
@@ -96,11 +95,12 @@ class LSB():
                     if index + 3 <= len(self.bits):
                         b = self.setComponentLSB(b, self.bits[index+2])
 
+                    # Set new pixel values
                     encodedImage.putpixel((col,row),(r,g,b))
 
                 index += 3
 
-        encodedImage.save('hidden.png')
+        encodedImage.save(outFilename)
 
         return encodedImage
 
@@ -131,24 +131,25 @@ class LSB():
                         count = 0   # and count
 
                         # If we read the separator last, set the message size
-                        if messageBits[-1] == ":" and msgSize is None:
+                        if messageBits[-1] == ':' and msgSize is None:
                             try:
-                                msgSize = int("".join(messageBits[:-1]))
+                                msgSize = int(''.join(messageBits[:-1]))
                             except:
                                 pass
 
                 # Return the message when bits read match size of message
                 if len(messageBits) - len(str(msgSize)) - 1 == msgSize:
-                    return "".join(messageBits)[len(str(msgSize))+1:]
+                    return ''.join(messageBits)[len(str(msgSize))+1:]
 
-        return ""
+        return ''
 
 
 
 # Driver script for testing
 x = LSB('lenna.png')
-encoded = x.hide('SECREjjjjjT')
+encoded = x.hide('THIS IS A super SECRET MESSAGE', 'encoded.png')
+print ('Message encoded (length:message) = ' + x.message)
 
-y = LSB('hidden.png')
+y = LSB('encoded.png')
 secret = y.extract()
-print(secret)
+print('Hidden Message found = ' + secret)
