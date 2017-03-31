@@ -24,7 +24,7 @@ class LSB():
             return mode_to_bd[self.cover.mode]
 
 
-    def messageBits(self, string):
+    def messageToBits(self, string):
         bits = []
         
         # Convert each character into binary and pad with 0s
@@ -49,7 +49,7 @@ class LSB():
             print ('Capacity of image:\t' + str(capacity))
 
         # Convert the string message into bits 
-        self.bits = self.messageBits(self.message)
+        self.bits = self.messageToBits(self.message)
         print('Message bits:\t\t' + str(len(self.bits)))
 
         if len(self.bits) >= capacity:
@@ -59,19 +59,54 @@ class LSB():
         return True
 
 
-        
+    def setComponentLSB(self,component, bit):
+        blankLSB = component & ~1
+        return blankLSB | int(bit)
+
+
     def hide(self):
         # Check that the message can fit inside the image
         if not self.validate():
             print ('Error: Validation failed. Cannot encode message into image')
             return
 
+        encodedImage = self.cover.copy()
+        width, height = self.cover.size
+
+        # Position within bits of message
+        index = 0
+
+        for row in range(height):
+            for col in range(width):
+
+                if index + 1 <= len(self.bits):
+
+                    (r,g,b) = encodedImage.getpixel((col, row))
+
+                    r = self.setComponentLSB(r, self.bits[index])
+
+                    if index + 2 <= len(self.bits):
+                        g = self.setComponentLSB(g, self.bits[index+1])
+                    
+                    if index + 3 <= len(self.bits):
+                        b = self.setComponentLSB(b, self.bits[index+2])
+
+                    encodedImage.putpixel((col,row),(r,g,b))
+
+                index += 3
+
+        return encodedImage
+
+
+
+
+
 
 def a2bits_list(chars):
     return [bin(ord(x))[2:].rjust(8, '0') for x in chars]
 
 # Driver script for testing
-x = LSB('macaws.png', 'SECRET')
+x = LSB('lenna.png', 'SECRET')
 x.hide()
 
 print(str(a2bits_list('SECRET')))
