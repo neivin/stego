@@ -3,9 +3,9 @@ import sys
 
 
 class LSB():
-    def __init__(self, filename, message):
+    def __init__(self, filename):
         self.filename = filename
-        self.message = message
+        self.message = None
         self.cover = None
         self.bits = None
 
@@ -31,8 +31,8 @@ class LSB():
         for char in string:
             binval = bin(ord(char))[2:].rjust(8,'0')
             
-            for bit in binval: 
-                bits.append(bit)
+            #for bit in binval: 
+            bits.append(binval)
 
         return bits
 
@@ -40,17 +40,18 @@ class LSB():
         Counts the number of bits in the secret message and 
         compares it to how much space exists in the cover image """
     def validate(self):
-        img_opened = self.open_image()
+        img = self.open_image()
         
         # Find the capacity of the image
         capacity = 0
-        if img_opened:
+        if img:
             capacity = self.cover.width * self.cover.height * (self.get_bit_depth()/8)
             print ('Capacity of image:\t' + str(capacity))
 
         # Convert the string message into bits 
-        self.bits = self.messageToBits(self.message)
+        self.bits = "".join(self.messageToBits(self.message))
         print('Message bits:\t\t' + str(len(self.bits)))
+        print(self.bits)
 
         if len(self.bits) >= capacity:
             print('Error: The message is too long to be encoded into the image ' + self.filename)
@@ -64,7 +65,11 @@ class LSB():
         return blankLSB | int(bit)
 
 
-    def hide(self):
+    def hide(self, secretMessage):
+        # Add length of message to message
+        self.message = str(len(secretMessage)) + ":" + secretMessage
+
+
         # Check that the message can fit inside the image
         if not self.validate():
             print ('Error: Validation failed. Cannot encode message into image')
@@ -95,18 +100,55 @@ class LSB():
 
                 index += 3
 
+        encodedImage.save('hidden.png')
+
         return encodedImage
 
 
+    def extract(self):
+        img = self.open_image()
+        width, height = self.cover.size
+
+        buff = 0
+        count = 0
+
+        messageBits = []
+        msgSize = None
+
+        for row in range(height):
+            for col in range(width):
+
+                # Go through each RGB component and pull out the LSB
+                for component in self.cover.getpixel((col, row)):
+                    # Read the bit and push left to make 8 bit chunk
+                    buff += (component & 1) << (7 - count)
+                    count += 1
+
+                    # Convert 8 bit chunk to char and append 
+                    if count == 8:
+                        messageBits.append(chr(buff))
+                        buff = 0    # Reset buffer
+                        count = 0   # and count
+
+                        # If we read the separator last, set the message size
+                        if messageBits[-1] == ":" and msgSize is None:
+                            try:
+                                msgSize = int("".join(messageBits[:-1]))
+                            except:
+                                pass
+
+                # Return the message when bits read match size of message
+                if len(messageBits) - len(str(msgSize)) - 1 == msgSize:
+                    return "".join(messageBits)[len(str(msgSize))+1:]
+
+        return ""
 
 
-
-
-def a2bits_list(chars):
-    return [bin(ord(x))[2:].rjust(8, '0') for x in chars]
 
 # Driver script for testing
-x = LSB('lenna.png', 'SECRET')
-x.hide()
+x = LSB('lenna.png')
+encoded = x.hide('SECREjjjjjT')
 
-print(str(a2bits_list('SECRET')))
+y = LSB('hidden.png')
+secret = y.extract()
+print(secret)
