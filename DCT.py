@@ -64,7 +64,7 @@ class DCT():
         #set LSB in DC value corresponding bit of message
         messIndex = 0
         letterIndex = 0
-        print(quantizedDCT[1][0][0])
+        #print(quantizedDCT[1][0][0])
 
         for quantizedBlock in quantizedDCT:
             #find LSB in DC coeff and replace with message bit
@@ -132,19 +132,21 @@ class DCT():
         #blocks then run through quantization table
         quantizedDCT = [dct_Block/ (quant) for dct_Block in dctBlocks]
         
-        print(quantizedDCT[1][0][0])
+        #print(quantizedDCT[1][0][0])
         i=0
         #message extracted from LSB of DC coeff
         for quantizedBlock in quantizedDCT:
             DC = quantizedBlock[0][0]
             DC = np.uint8(DC)
             DC = np.unpackbits(DC)
-            print(DC[7])
+            #print(DC[7])
             i=1+i
             if i == 100:
                 break
             
-
+        #Place holder for change bits to string and return string
+        #
+        #
         return messageBits
 
     def chunks(self,l, n):
