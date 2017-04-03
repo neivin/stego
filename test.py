@@ -1,9 +1,11 @@
 import sys
 import os
+from LSB import LSB
 from argparse import ArgumentParser
 
 def parser():
    
+   #set the command line arguments
     parser = ArgumentParser(description="image-steg")
 
     parser.add_argument('-d', dest='encrypt', action='store_false',
@@ -28,21 +30,37 @@ def parser():
 
 def main():
     args = parser()
-
+    
     algo = args.algorithm
     inFile = args.inputfile
     message = args.string
     outFile = args.outputfile
 
+    #encryption input check
     if args.encrypt is True and args.string is None:
         raise ValueError("Encryption requires an input string")
 
+    #encryption
     if args.encrypt:
+
+        #set output file if not specified
         if not args.outputfile:
             outFile = "ENCRYPTED"+inFile
+
+        #LSB implementation
+        if algo == "LSB":
+            x = LSB(inFile)
+            encoded = x.hide(message, outFile)
+            print ('Message encoded (length:message) = ' + x.message)
+
+    #decryption
     else:
-        if not args.outputfile:
-            outFile = "DECRYPTED"+inFile
+        #LSB implementation
+        if algo == 'LSB':
+            y = LSB(inFile)
+            secret = y.extract()
+            print('Hidden Message found = ' + secret)
+            
 
 if __name__ == "__main__":
     main()
