@@ -192,13 +192,3 @@ class DCT():
         self.numBits = bin(len(bits))[2:].rjust(8,'0')
         return bits
 
-#Test Script
-testEn = DCT('lenna.png')
-secret = testEn.DCTEn('Super SECRET!', 'secret.png')
-
-print('Message encoded = '+ testEn.message)
-
-testDe = DCT('secret.png')
-decode = testDe.DCTDe()
-print('Hidden Message extracted = ',end='')
-print (decode)

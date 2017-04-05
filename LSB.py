@@ -143,13 +143,3 @@ class LSB():
 
         return ''
 
-
-
-# Driver script for testing
-x = LSB('lenna.png')
-encoded = x.hide('THIS IS A super SECRET MESSAGE', 'encoded.png')
-print ('Message encoded (length:message) = ' + x.message)
-
-y = LSB('encoded.png')
-secret = y.extract()
-print('Hidden Message found = ' + secret)

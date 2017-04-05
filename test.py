@@ -1,6 +1,7 @@
 import sys
 import os
 from LSB import LSB
+from DCT import DCT
 from argparse import ArgumentParser
 
 def parser():
@@ -36,6 +37,7 @@ def main():
     message = args.string
     outFile = args.outputfile
 
+
     #encryption input check
     if args.encrypt is True and args.string is None:
         raise ValueError("Encryption requires an input string")
@@ -51,7 +53,12 @@ def main():
         if algo == "LSB":
             x = LSB(inFile)
             encoded = x.hide(message, outFile)
-            print ('Message encoded (length:message) = ' + x.message)
+            #print ('Message encoded = ' + x.message)
+        else: 
+        #DCT implementation
+            x = DCT(inFile)
+            secret = x.DCTEn(message, outFile)
+            #print('Message encoded = '+ x.message)
 
     #decryption
     else:
@@ -60,7 +67,13 @@ def main():
             y = LSB(inFile)
             secret = y.extract()
             print('Hidden Message found = ' + secret)
+        else: 
+        #DCT implementation
+            y = DCT(inFile)
+            decode = y.DCTDe()
+            print('Hidden Message found= '+ decode)
             
+  
 
 if __name__ == "__main__":
     main()
