@@ -41,7 +41,9 @@ class DCT():
         #cv2.waitKey(0)
         #cv2.destroyAllWindows()
         #make divisible by 8x8
-        img = self.addPadd(img, row, col)
+        if row%8 != 0 or col%8 != 0:
+            img = self.addPadd(img, row, col)
+        
         row,col = img.shape[:2]
 
         #split image into RGB channels
@@ -52,8 +54,8 @@ class DCT():
         #print(bImg[0:8,0:8])
     
         #break into 8x8 blocks
-        imgBlocks = [np.round(bImg[j:j+8, i:i+8]-128) for (j,i) in itertools.product(xrange(0,row,8),
-                                                                       xrange(0,col,8))]
+        imgBlocks = [np.round(bImg[j:j+8, i:i+8]-128) for (j,i) in itertools.product(range(0,row,8),
+                                                                       range(0,col,8))]
         #print(imgBlocks[1][0])
         #Blocks are run through DCT function
         dctBlocks = [np.round(cv2.dct(img_Block)) for img_Block in imgBlocks]
@@ -99,7 +101,7 @@ class DCT():
         #print(sImgBlocks[1][0])
         sImg=[]
         for chunkRowBlocks in self.chunks(sImgBlocks, col/8):
-            for rowBlockNum in xrange(8):
+            for rowBlockNum in range(8):
                 for block in chunkRowBlocks:
                     sImg.extend(block[rowBlockNum])
         sImg = np.array(sImg).reshape(row, col)
@@ -129,8 +131,8 @@ class DCT():
         #print(bImg[0:8,0:8])
     
         #break into 8x8 blocks
-        imgBlocks = [bImg[j:j+8, i:i+8]-128 for (j,i) in itertools.product(xrange(0,row,8),
-                                                                       xrange(0,col,8))]    
+        imgBlocks = [bImg[j:j+8, i:i+8]-128 for (j,i) in itertools.product(range(0,row,8),
+                                                                       range(0,col,8))]    
         #blocks run through quantization table
         #quantizedDCT = [dct_Block/ (quant) for dct_Block in dctBlocks]
         quantizedDCT = [img_Block/quant for img_Block in imgBlocks]
@@ -163,8 +165,9 @@ class DCT():
         return ''
 
     def chunks(self,l, n):
-        for i in xrange(0, len(l), n):
-            yield l[i:i + n]
+        m = int(n)
+        for i in range(0, len(l), m):
+            yield l[i:i + m]
 
     def loadImage(self):
         #load image
