@@ -26,6 +26,9 @@ def parser():
     parser.add_argument("-s", dest="string", required=False,
                         help="Message to encrypt")
 
+    parser.add_argument("-f", dest="file", required=False,
+                        help="Text file containing message", metavar="FILE")
+
     args = parser.parse_args()
     return args
 
@@ -36,18 +39,27 @@ def main():
     inFile = args.inputfile
     message = args.string
     outFile = args.outputfile
+    msgFile = args.file
 
 
     #encryption input check
-    if args.encrypt is True and args.string is None:
+    if args.encrypt is True and args.string is None and args.file is None:
         raise ValueError("Encryption requires an input string")
 
+    # read file msg
+    if args.file is not None:
+        with open(msgFile, 'r') as textFile:
+            message = textFile.read().replace('\n', '')
+        
     #encryption
     if args.encrypt:
 
         #set output file if not specified
         if not args.outputfile:
-            outFile = "ENCRYPTED"+inFile
+            rawName = os.path.basename(os.path.normpath(inFile))
+            dirName = os.path.dirname(os.path.normpath(inFile))
+
+            outFile = dirName + '/' + algo + rawName
 
         #LSB implementation
         if algo == "LSB":
@@ -66,12 +78,12 @@ def main():
         if algo == 'LSB':
             y = LSB(inFile)
             secret = y.extract()
-            print('Hidden Message found = ' + secret)
+            print('Hidden Message:\n' + secret)
         else: 
         #DCT implementation
             y = DCT(inFile)
             decode = y.DCTDe()
-            print('Hidden Message found= '+ decode)
+            print('Hidden Message:\n'+ decode)
             
   
 
