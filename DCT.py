@@ -37,6 +37,10 @@ class DCT():
         self.message = str(len(secret))+'*'+secret
         self.bitMess = self.toBits()
         
+        if((col/8)*(row/8)<len(secret)):
+          print("Error: Message too large to encode in image")
+          return
+        
         #get size of image in pixels
         row,col = img.shape[:2]
         self.oriRow, self.oriCol = row, col        
