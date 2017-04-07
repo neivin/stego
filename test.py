@@ -1,5 +1,6 @@
-import sys
 import os
+import sys
+import time
 from LSB import LSB
 from DCT import DCT
 from argparse import ArgumentParser
@@ -63,27 +64,43 @@ def main():
 
         #LSB implementation
         if algo == "LSB":
+            start = time.time()
             x = LSB(inFile)
             encoded = x.hide(message, outFile)
+            end = time.time()-start
+            print 'time: '
+            print end
             #print ('Message encoded = ' + x.message)
         else: 
         #DCT implementation
+            start = time.time()
             x = DCT(inFile)
             secret = x.DCTEn(message, outFile)
+            end = time.time()-start
+            print 'time: '
+            print end
             #print('Message encoded = '+ x.message)
 
     #decryption
     else:
         #LSB implementation
         if algo == 'LSB':
+            start = time.time()
             y = LSB(inFile)
             secret = y.extract()
+            end = time.time()-start
             print('Hidden Message:\n' + secret)
+            print 'time: '
+            print end
         else: 
         #DCT implementation
+            start = time.time()
             y = DCT(inFile)
             decode = y.DCTDe()
+            end = time.time()-start
             print('Hidden Message:\n'+ decode)
+            print 'time: '
+            print end
             
   
 
