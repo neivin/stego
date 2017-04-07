@@ -22,6 +22,11 @@ class DCT():
         self.oriRow = 0
         self.numBits = 0   
     
+    """Input: secret - secret message to be hidden
+              outIm - name of the image you want to be output
+       Function: takes message to be hidden and preforms dct stegonography to hide the image within the least
+                  significant bits of the DC coefficents.
+       Output: writes out an image with the encoded message"""
     def DCTEn(self, secret, outIm):
         #load image for processing
         img = self.loadImage()
@@ -98,7 +103,7 @@ class DCT():
         #blocks run through inverse DCT
         #sImgBlocks = [cv2.idct(B)+128 for B in quantizedDCT]
         
-        #print(sImgBlocks[1][0])
+        #puts the new image back together
         sImg=[]
         for chunkRowBlocks in self.chunks(sImgBlocks, col/8):
             for rowBlockNum in range(8):
@@ -113,7 +118,10 @@ class DCT():
         sImg = cv2.merge((sImg,gImg,rImg))
         cv2.imwrite(outIm,sImg)
         return sImg
-
+    
+    """Input: no input needed for function
+      Function: takes an image with a hidden dct encoded message and extracts the message into plaintext
+      Output: returns the plaintext string of the hidden message found"""
     def DCTDe(self):
         img = cv2.imread(self.imPath, cv2.IMREAD_UNCHANGED)
 
@@ -163,12 +171,16 @@ class DCT():
                 return ''.join(messageBits)[len(str(messSize))+1:]
 
         return ''
-
+      
+    """Helper function to 'stitch' new image back together"""
     def chunks(self,l, n):
         m = int(n)
         for i in range(0, len(l), m):
             yield l[i:i + m]
-
+    
+    """Input: no input
+        Function: loads image into memory
+        Output: returns the memory where the image is"""
     def loadImage(self):
         #load image
         img = cv2.imread(self.imPath, cv2.IMREAD_UNCHANGED)
@@ -178,11 +190,18 @@ class DCT():
 
         return img
 
-    #add 'Padding' making image dividable by 8x8 blocks
+    """Input: img-the image to be padded
+              row-the number of rows of pixels in the image
+              col-the number of columns in the image
+       Function: add 'Padding' making image dividable by 8x8 blocks
+       Output: returns the new padded image"""
     def addPadd(self,img, row, col):
         img = cv2.resize(img,(col+(8-col%8),row+(8-row%8)))    
         return img
-
+    
+    """Input: no inputs
+        Function: transforms the message that is wanted to be hidden from plaintext to a list of bits
+        Output: returns the list of strings of bits"""
     def toBits(self):
         bits = []
 
