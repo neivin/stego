@@ -4,6 +4,7 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{graphicx}% http://ctan.org/pkg/graphicx
 \usepackage{xcolor,colortbl}
+\usepackage{enumitem}
 
 \definecolor{Gray}{gray}{0.85}
 \newcolumntype{a}{>{\columncolor{Gray}}c}
@@ -164,5 +165,27 @@ $k_1=0.01$ and $k_2=0.03$ by default
 
 \section{Conclusion}
 Both algorithms allowed for effective embedding and retrieval of the test message. Based on the results it can be concluded that the LSB algorithm provides a better image quality after embedding. This can be seen through analysis of the MSE and SSIM values as well as a visual inspection of the images. The time taken to encrypt and decrypt also favoured LSB, however the difference was negligible in a real world setting. However, LSB provides less security against attacks if the image is recognized as a steganographic image.
+
+\clearpage
+\section{Tools Used}
+The project was implemented in Python and utilized the following libraries:
+\begin{itemize}
+\setlength\itemsep{0pt}
+\item OpenCV
+\item Pillow (Python Imaging Library)
+\item SciKit-Image
+\item NumPy
+\item Matplotlib
+\end{itemize}
+
+\section{Bibliography}
+\begin{enumerate}[label={[\arabic*]}]
+\item M. Sravanthi, M. Devi, S. Riyazoddin, and M. Reddy, “A Spatial Domain Image Steganography Technique Based on Plane Bit Substitution Method,” Glob. J. Comput. …, vol. 12, no. 15, 2012.
+\item S. Dhall, B. Bhushan, and S. Gupta, “An in-depth analysis of various steganography techniques,” Int. J. Secur. its Appl., vol. 9, no. 8, pp. 67–94, 2015.
+\item F. M. Shelke, A. A. Dongre, and P. D. Soni, “Comparison of different techniques for Steganography in images,” vol. 3, no. 2, pp. 171–176, 2014.
+\item G. Kaur and A. Kochhar, “A Steganography Implementation based on LSB \& DCT,” vol. 4, no. 1, pp. 35–41, 2012.
+\end{enumerate}
+
+
 
 \end{document}
