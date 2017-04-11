@@ -108,7 +108,7 @@ $$capacity_{DCT} = \frac{width \times height}{8 \times 8} \ \ \ bits$$
 \item Divide each block by the quantization table above
 \item Read in the least significant bit of each DC coefficient in 8 bit blocks
 \item Once ‘*’ is encountered set message size to integer that came before separator
-\item Read in 8 bit blocks from image, converting them to plaintext characters, until the length of the message matches the message size recovered
+\item Read in 8 bit blocks from image, converting them to plain text characters, until the length of the message matches the message size recovered
 \item Return the decoded message
 \end{enumerate}
 
