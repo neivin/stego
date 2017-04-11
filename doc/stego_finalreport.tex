@@ -2,6 +2,11 @@
 
 \usepackage[small,compact]{titlesec}
 \usepackage[margin=1in]{geometry}
+\usepackage{graphicx}% http://ctan.org/pkg/graphicx
+\usepackage{xcolor,colortbl}
+
+\definecolor{Gray}{gray}{0.85}
+\newcolumntype{a}{>{\columncolor{Gray}}c}
 
 \linespread{1.45}
 
@@ -107,23 +112,55 @@ $$capacity_{DCT} = \frac{width \times height}{8 \times 8} \ \ \ bits$$
 \end{enumerate}
 
 \section{Testing Methods}
-To compare LSB and DCT, a standard PNG-24 image \texttt{lenna.png} sized 240x240 was used. All experiments were run on a standard 2014 Macbook Pro. The two techniques were compared in the following categories
-\subsection{Time Taken}
-The time taken to encode the same \texttt{10kB} plaintext message into our image was recorded and compared.
+To compare LSB and DCT, a standard PNG-24 image \texttt{lenna.png} sized 240x240 was used. All experiments were run on a standard 2014 Macbook Pro. The two techniques were compared in the following categories:
+\begin{enumerate}
+\setlength\itemsep{0pt}
+\item \textbf{Time Taken} -- The time taken to encode the same \texttt{10kB} plaintext message into our image was recorded and compared.
 
-\subsection{Message Size Limit}
-The maximum limit for size of the message that could be hidden within the standard image was analyzed.
+\item \textbf{Message Size} -- The maximum limit for size of the message that could be hidden within the standard image was analyzed.
 
-\subsection{Visual Quality}
-A qualitative analysis of the visual quality of the image was also conducted. 
+\item \textbf{Visual Quality} -- A qualitative analysis of the visual quality of the image was also conducted. 
 
-\subsection{Image Error}
-The following measures of image error were used to compare the two techniques.
+\item \textbf{Image Error} -- The following measures of image error were used to compare the two techniques.
 \begin{itemize}
+\setlength\itemsep{0pt}
 \item \textbf{Mean Squared Error (MSE)}
-\item \textbf{Structural Similarity Index (SSIM)}
-\end{itemize}
 
+The MSE between the encoded image and the original image was calculated using the below equation. An MSE of zero means less image deviation from original, while an MSE of more than 1 indicates less similarity (grows as the differences in pixel colours increases.
+$$MSE = \frac{1}{MN}\sum_{n=1}^{M}\sum_{m=1}^{N} \left[\ h(n,m) - g(n,m) \right]^2 \ \ \ \ for\ images\ g(n,m)\ and\ h(n,m)$$
+
+\item \textbf{Structural Similarity Index (SSIM)}
+
+The structural similarity index(SSIM) is used to measure similarity between two images based on their luminance, contrast and structure. A SSIM value of 1 means there is no perceived difference in the images. The measure between two windows $x$ and $y$ of common size $N \times N$ is:
+$$
+SSIM(x,y) = \frac{(2\mu_x\mu_y + c_1)(2\sigma_xy + c_2)}{(\mu_x^2 + \mu_y^2 + c_1)(\sigma_x^2 + \sigma_y^2 + c_2)}
+$$
+where $\mu_x$ is the average of $x$\\
+$\mu_y$ is the average of $y$\\
+$\sigma_x^2$ is the variance of $x$\\
+$\sigma_y^2$ is the variance of $y$\\
+$\sigma_xy$ is the covariance of $x$ and $y$\\
+$c_1=(k_1L)^2, c_2=(k_2L)^2$ used as variables to stabilize division with weak denominator\\
+$L$ is the dynamic range of pixel values\\
+$k_1=0.01$ and $k_2=0.03$ by default
+\end{itemize}
+\end{enumerate}
+
+\section{Results}
+\begin{center}
+{\renewcommand{\arraystretch}{1.4}% for the vertical padding
+\begin{tabular}{ a|c|c|c }
+	\hline
+	Result & Original & LSB & DCT \\
+ Image & \includegraphics[width=40mm]{lenna.png} & \includegraphics[width=40mm]{LSBlenna.png} & \includegraphics[width=40mm]{DCTlenna.png} \\ 
+ Time Taken & N/A & {\renewcommand{\arraystretch}{0.9}\begin{tabular}{@{}c@{}}Encoding: 0.171s \\ Decoding: 0.031s \end{tabular}} & {\renewcommand{\arraystretch}{0.9}\begin{tabular}{@{}c@{}}Encoding: 0.234s \\ Decoding: 0.075s \end{tabular}}\\  
+ Message Size& N/A & 21,600 bytes & 450 bytes\\
+ Visual Quality&N/A& No quality difference & {\renewcommand{\arraystretch}{0.9}\begin{tabular}{@{}c@{}}Slight blue tint\\ Grid pattern present\end{tabular}}\\
+ MSE& 0.0 &0.02&1,886.86\\
+ SSIM&1.0&0.98&0.76\\
+\end{tabular}
+}
+\end{center}
 
 \section{Conclusion}
 Both algorithms allowed for effective embedding and retrieval of the test message. Based on the results it can be concluded that the LSB algorithm provides a better image quality after embedding. This can be seen through analysis of the MSE and SSIM values as well as a visual inspection of the images. The time taken to encrypt and decrypt also favoured LSB, however the difference was negligible in a real world setting. However, LSB provides less security against attacks if the image is recognized as a steganographic image.
