@@ -68,8 +68,8 @@ def main():
             x = LSB(inFile)
             encoded = x.hide(message, outFile)
             end = time.time()-start
-            print 'time: '
-            print end
+            print ('time: ')
+            print (end)
             #print ('Message encoded = ' + x.message)
         else: 
         #DCT implementation
@@ -77,8 +77,8 @@ def main():
             x = DCT(inFile)
             secret = x.DCTEn(message, outFile)
             end = time.time()-start
-            print 'time: '
-            print end
+            print ('time: ')
+            print (end)
             #print('Message encoded = '+ x.message)
 
     #decryption
@@ -90,8 +90,8 @@ def main():
             secret = y.extract()
             end = time.time()-start
             print('Hidden Message:\n' + secret)
-            print 'time: '
-            print end
+            print ('time: ')
+            print (end)
         else: 
         #DCT implementation
             start = time.time()
@@ -99,8 +99,8 @@ def main():
             decode = y.DCTDe()
             end = time.time()-start
             print('Hidden Message:\n'+ decode)
-            print 'time: '
-            print end
+            print ('time: ')
+            print (end)
             
   
 
