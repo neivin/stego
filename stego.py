@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import os
 import sys
 import time
@@ -8,27 +10,27 @@ from argparse import ArgumentParser
 def parser():
    
    #set the command line arguments
-    parser = ArgumentParser(description="image-steg")
+    parser = ArgumentParser(description="Stego: DCT and LSB Image Steganography")
 
     parser.add_argument('-d', dest='encrypt', action='store_false',
-                        help="Sets method to decrypt, default is encrypt",
+                        help="Set method to decode, default is encode",
                         default=True)
 
     parser.add_argument('-a', dest='algorithm', action='store_const',
-                        help="Sets algorithm to LSB, default is DCT",
+                        help="Set encoding/decoding algorithm to LSB, default is DCT",
                         const="LSB", default="DCT")
 
     parser.add_argument("-i", dest="inputfile", required=True,
-                        help="input file name", metavar="FILE")
+                        help="Specify input file name", metavar="FILE")
 
     parser.add_argument("-o", dest="outputfile", required=False,
-                        help="output file name (optional)", metavar="FILE")
+                        help="Specify output file name (optional)", metavar="FILE")
 
     parser.add_argument("-s", dest="string", required=False,
-                        help="Message to encrypt")
+                        help="Specify message to encrypt")
 
     parser.add_argument("-f", dest="file", required=False,
-                        help="Text file containing message", metavar="FILE")
+                        help="Specify text file containing message", metavar="FILE")
 
     args = parser.parse_args()
     return args
